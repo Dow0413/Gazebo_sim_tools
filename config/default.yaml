@@ -1,0 +1,19 @@
+# Put one GLB in ../glb/, then update input_glb and model_name below.
+# Paths are relative to GZ_sim_tools/ unless noted otherwise.
+mode: both                    # gs_gz | gz_pcd | both; run_all.sh uses both stages
+input_glb: /home/dow/DOW/robot_gazebo_sim/gazebo_sim_ws_3/GZ_sim_tools/glb/2026_1_28.glb
+model_name: test1     # Gazebo model and world name; letters, digits, _ and - only
+
+paths:
+  glb_dir: glb
+  maps_dir: maps              # generated Gazebo model and .world are retained here
+  pcd_dir: pcd
+
+gs_gz:
+  overwrite: false            # refuse to replace an existing generated map folder
+
+gz_pcd:
+  resolution: 0.05            # metres; mesh surface sampling spacing
+  voxel_size: 0.05            # metres; 0 disables voxel downsampling
+  seed: 0
+  output_pcd: test1.pcd
