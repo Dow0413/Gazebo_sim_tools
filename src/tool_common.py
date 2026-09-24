@@ -95,6 +95,16 @@ def externalize_gltf(glb: Path, output_dir: Path) -> tuple[list[float], list[flo
         (texture_dir / filename).write_bytes(binary[offset:offset + int(view["byteLength"])])
         image.pop("mimeType", None)
         image["uri"] = f"textures/{filename}"
+    # The glTF default for metallicFactor is 1.0.  Photogrammetry / Gaussian
+    # splatting maps frequently omit it even though their JPEG base-color maps
+    # represent non-metal surfaces.  With no environment reflection, OGRE then
+    # renders those surfaces nearly black.  Make the intended dielectric
+    # material explicit while preserving exporters that already set a value.
+    for material in document.get("materials", []):
+        pbr = material.get("pbrMetallicRoughness")
+        if isinstance(pbr, dict) and "baseColorTexture" in pbr:
+            pbr.setdefault("metallicFactor", 0.0)
+            pbr.setdefault("roughnessFactor", 0.85)
     document["buffers"][0]["uri"] = "map.bin"
     document["buffers"][0]["byteLength"] = len(binary)
     document.setdefault("asset", {})["generator"] = "GZ_sim_tools external texture export"

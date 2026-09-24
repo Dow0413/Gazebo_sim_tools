@@ -24,13 +24,15 @@ def main() -> int:
     parser.add_argument("--config", default=Path(__file__).resolve().parents[2] / "config/default.yaml")
     args = parser.parse_args()
     root, config = load_config(args.config)
-    name = model_name(config)
+    settings = config.get("glb_to_world", {})
+    if not isinstance(settings, dict):
+        raise SystemExit("glb_to_world must be a YAML mapping")
+    name = model_name({"model_name": settings.get("map_name", "")})
     paths = config["paths"]
-    glb = relative_path(root, str(paths.get("glb_dir", "glb"))) / str(config.get("input_glb", ""))
+    glb = relative_path(root, str(settings.get("input_glb", "")))
     if not glb.is_file():
         raise SystemExit(f"input_glb does not exist: {glb}")
     maps_dir = relative_path(root, str(paths.get("maps_dir", "maps")))
-    settings = config["gs_gz"]
     overwrite = bool(settings.get("overwrite", False))
     generated_model = maps_dir / name
     ensure_empty(generated_model, overwrite)
