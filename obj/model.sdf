@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<sdf version="1.6"><model name="test1"><static>true</static><link name="map_link">
+<visual name="visual"><pose>0 0 1.49098766 1.5707963 0 0</pose><geometry><mesh><uri>model://test1/meshes/map.gltf</uri></mesh></geometry></visual>
+<collision name="collision"><pose>0 0 1.49098766 1.5707963 0 0</pose><geometry><mesh><uri>model://test1/meshes/map.glb</uri></mesh></geometry></collision>
+</link></model></sdf>
